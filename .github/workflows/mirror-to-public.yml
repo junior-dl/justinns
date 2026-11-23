@@ -1,0 +1,25 @@
+# Mirrors this private repository to the public `justinns` repository on every push.
+# Needs a repository secret MIRROR_TOKEN: a fine-grained personal access token with
+# "Contents: Read and write" on junior-dl/justinns.
+name: Mirror to public repo
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["**"]
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    if: github.repository == 'junior-dl/justinns-private'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Push all branches and tags to the public mirror
+        env:
+          MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
+        run: |
+          git remote add public "https://x-access-token:${MIRROR_TOKEN}@github.com/junior-dl/justinns.git"
+          git push public --prune "refs/remotes/origin/*:refs/heads/*" "refs/tags/*:refs/tags/*"

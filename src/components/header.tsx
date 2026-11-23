@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import clsx from "clsx";
 import { useAuth } from "@/composables/use-auth";
+import { Logo } from "./logo";
 
 const nav = [
   { href: "/lodgings?type=hotel", label: "Hotels" },
@@ -28,7 +29,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-30 border-b border-sand-200/80 bg-sand-50/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-5">
-        <Link href="/" className="font-display text-2xl tracking-tight">Just<span className="text-clay-500">Inns</span></Link>
+        <Link href="/" aria-label="JustInns home"><Logo /></Link>
         <nav className="hidden items-center gap-6 text-sm md:flex">{links}</nav>
         <div className="hidden items-center gap-3 text-sm md:flex">
           {isPending ? null : user ? (

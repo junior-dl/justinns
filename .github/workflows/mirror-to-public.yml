@@ -1,25 +1,41 @@
 # Mirrors this private repository to the public `justinns` repository on every push.
 # Needs a repository secret MIRROR_TOKEN: a fine-grained personal access token with
-# "Contents: Read and write" on junior-dl/justinns.
+# "Contents" and "Workflows" set to Read and write on junior-dl/justinns.
 name: Mirror to public repo
 
 on:
   push:
     branches: ["**"]
     tags: ["**"]
+  delete:
   workflow_dispatch:
+
+concurrency:
+  group: mirror
+  cancel-in-progress: false
 
 jobs:
   mirror:
     if: github.repository == 'junior-dl/justinns-private'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          # Don't keep the workflow's own token: it would override MIRROR_TOKEN
+          # when pushing to the other repository.
+          persist-credentials: false
       - name: Push all branches and tags to the public mirror
         env:
           MIRROR_TOKEN: ${{ secrets.MIRROR_TOKEN }}
         run: |
+          if [ -z "$MIRROR_TOKEN" ]; then
+            echo "::error::MIRROR_TOKEN secret is missing"; exit 1
+          fi
           git remote add public "https://x-access-token:${MIRROR_TOKEN}@github.com/junior-dl/justinns.git"
-          git push public --prune "refs/remotes/origin/*:refs/heads/*" "refs/tags/*:refs/tags/*"
+          # Turn every remote-tracking branch into a real branch (skipping origin/HEAD).
+          git for-each-ref --format='%(refname:strip=3)' refs/remotes/origin \
+            | grep -vx HEAD \
+            | while read -r b; do git branch -f "$b" "origin/$b" 2>/dev/null || true; done
+          # The public repo is an exact copy, so overwrite it.
+          git push public --force --prune "refs/heads/*:refs/heads/*" "refs/tags/*:refs/tags/*"

@@ -11,8 +11,6 @@ const nav = [
   { href: "/lodgings?type=hotel", label: "Hotels" },
   { href: "/lodgings?type=inn", label: "Inns" },
   { href: "/lodgings?type=pension", label: "Pensions" },
-  { href: "/discounts", label: "Deals" },
-  { href: "/about", label: "About" },
 ];
 
 export function Header() {

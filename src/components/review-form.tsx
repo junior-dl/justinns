@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { Star } from "lucide-react";
 import { useSubmitReview } from "@/composables/use-reviews";
 import { Alert, Button, Field, Input, Textarea } from "./ui";
 
@@ -19,10 +18,10 @@ export function ReviewForm({ lodgingId, onDone }: { lodgingId: number; onDone: (
         if (await submit({ lodgingId, rating, title: String(f.get("title")), comment: String(f.get("comment")) })) setSent(true);
       }}
     >
-      <div className="flex items-center gap-1" role="radiogroup" aria-label="Rating">
+      <div className="flex items-center gap-2" role="radiogroup" aria-label="Rating">
         {[1, 2, 3, 4, 5].map((i) => (
           <button type="button" key={i} role="radio" aria-checked={rating === i} aria-label={`${i} star${i > 1 ? "s" : ""}`} onClick={() => setRating(i)}>
-            <Star size={24} className={i <= rating ? "fill-clay-500 text-clay-500" : "text-sand-200"} />
+            <span className={`block size-6 rounded-full border-2 border-salmon ${i <= rating ? "bg-salmon" : ""}`} />
           </button>
         ))}
       </div>

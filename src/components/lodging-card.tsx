@@ -4,6 +4,7 @@ import type { LodgingCard as L } from "@/lib/types";
 import { peso } from "@/lib/format";
 import { FavoriteButton } from "./favorite-button";
 import { Badge } from "./ui";
+import { Stars } from "./stars";
 
 export function LodgingCard({ lodging: l }: { lodging: L }) {
   return (
@@ -19,7 +20,7 @@ export function LodgingCard({ lodging: l }: { lodging: L }) {
           <h3 className="text-lg leading-tight">{l.name}</h3>
           <p className="mt-0.5 flex items-center gap-1 text-sm text-muted"><MapPin size={13} />{l.city}</p>
         </div>
-        {l.rating !== null && <span className="shrink-0 text-sm font-medium">★ {l.rating.toFixed(1)} <span className="text-muted">({l.reviewCount})</span></span>}
+        {l.rating !== null && <span className="flex shrink-0 items-center gap-1.5 text-sm font-medium"><Stars value={l.rating} size={8} />{l.rating.toFixed(1)} <span className="text-muted">({l.reviewCount})</span></span>}
       </div>
       {l.fromPrice !== null && <p className="mt-1 text-sm"><span className="font-semibold">{peso(l.fromPrice)}</span> <span className="text-muted">/ night</span></p>}
     </Link>

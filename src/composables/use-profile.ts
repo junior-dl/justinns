@@ -4,7 +4,10 @@ import { useProfileStore } from "@/stores/profile.store";
 
 export function useProfile() {
   const s = useProfileStore();
-  const { fetch } = s;
-  useEffect(() => { fetch().catch(() => {}); }, [fetch]);
+  const { fetch, fetchReviews } = s;
+  useEffect(() => {
+    fetch().catch(() => {});
+    fetchReviews().catch(() => {});
+  }, [fetch, fetchReviews]);
   return s;
 }

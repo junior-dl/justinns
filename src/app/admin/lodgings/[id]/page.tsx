@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAdminLodging } from "@/composables/use-admin";
 import { LodgingForm } from "@/components/admin/lodging-form";
+import { RoomsTable } from "@/components/admin/rooms-table";
 import { Alert, Button, Card, Field, Input, Select, Skeleton, Textarea } from "@/components/ui";
 import { peso } from "@/lib/format";
 import type { RoomType } from "@/lib/types";
@@ -97,14 +98,7 @@ export default function AdminLodgingEdit({ params }: { params: Promise<{ id: str
           <Field label="Floor"><Input name="floor" type="number" min={0} required defaultValue={1} className="w-24" /></Field>
           <Button disabled={!s.roomTypes.length}>Add room</Button>
         </form>
-        <div className="flex flex-wrap gap-2">
-          {s.rooms.map((r) => (
-            <span key={r.id} className="inline-flex items-center gap-2 rounded-full border border-sand-200 bg-white px-3 py-1 text-xs">
-              {r.number} · {r.roomTypeName}
-              <button aria-label={`Delete room ${r.number}`} onClick={() => confirm(`Delete room ${r.number}?`) && s.deleteRoom(r.id)} className="text-muted hover:text-clay-500">×</button>
-            </span>
-          ))}
-        </div>
+        <RoomsTable rooms={s.rooms} roomTypes={s.roomTypes} onDelete={(r) => confirm(`Delete room ${r.number}?`) && s.deleteRoom(r.id)} />
       </Card>
     </div>
   );
